@@ -11,7 +11,7 @@ import SceneKit
 
 class Unit: SCNNode {
     var state: UnitState = .dead
-    var surroundings: [[Unit]] = [[Unit]]()
+    var surroundings2D: [Unit] = [Unit]()
     var width: CGFloat = CGFloat()
     var height: CGFloat = CGFloat()
     var length: CGFloat = CGFloat()
@@ -19,8 +19,12 @@ class Unit: SCNNode {
     var max: SCNVector3 = SCNVector3()
     var node: SCNNode = SCNNode()
     
-    init(node: SCNNode) {
+    override init() {
         super.init()
+    }
+    
+    convenience init(node: SCNNode) {
+        self.init()
         guard let nodeCopy = node.copy() as? SCNNode else { return }
         self.node = nodeCopy
         self.min = node.boundingBox.min 
@@ -46,4 +50,55 @@ class Unit: SCNNode {
     func changeState() {
         self.state = self.state == .alive ? .dead : .alive
     }
+    
+    func setSurroundings2D(unit: Unit) {
+        self.surroundings2D.append(unit)
+    }
+    
+    func getSurroundings2D() -> [Unit] {
+        return self.surroundings2D
+    }
+    
+    func removeSurroundings2D() {
+        self.surroundings2D.removeAll()
+    }
+    
+    func howMuchSurroundAlive2D() -> Int {
+        var count = 0
+        for i in 0 ..< self.getSurroundings2D().count {
+            if self.surroundings2D[i].state == .alive {
+                count += 1
+            }
+        }
+        return count
+    }
+    
+    ///Qualquer célula viva com menos de dois vizinhos vivos morre de solidão.
+    func lonelyDeath() -> Bool {
+        if howMuchSurroundAlive2D() < 2 {
+            self.state = .dead
+            return true
+        }
+        return false
+    }
+    
+    ///Qualquer célula viva com mais de três vizinhos vivos morre de superpopulação.
+    func overpopulationDeath() -> Bool {
+        if howMuchSurroundAlive2D() > 3 {
+            self.state = .dead
+            return true
+
+        }
+        return false
+    }
+    
+    ///Qualquer célula morta com exatamente três vizinhos vivos se torna uma célula viva.
+    func populationAlive() -> Bool {
+        if howMuchSurroundAlive2D() == 3 {
+            self.state = .alive
+            return true
+        }
+        return false
+    }
+    
 }

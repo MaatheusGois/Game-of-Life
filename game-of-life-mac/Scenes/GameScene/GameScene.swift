@@ -8,63 +8,83 @@
 
 import Cocoa
 import SceneKit
+import AVFoundation
 
 public class GameScene: SCNScene {
+    var map: Map = Map()
+    var nextState: [[UnitState]] = [[UnitState]]()
+    
+    let boxScene = SCNScene(named: "art.scnassets/box.scn")
+    let n = 10
     
     func setupScene() {
         
         guard let boxScene = SCNScene(named: "art.scnassets/box.scn") else { return }
         guard let box = boxScene.rootNode.childNode(withName: "box", recursively: false) else { return }
+        guard let voidBox = boxScene.rootNode.childNode(withName: "voidBox", recursively: false) else { return }
         
-//        self.rootNode.addChildNode(box)
         
-        let min = box.boundingBox.min
-        let max = box.boundingBox.max
-        let w = CGFloat(max.x - min.x)
-        let h = CGFloat(max.y - min.y)
-        let l = CGFloat(max.z - min.z)
+        let base: Unit = Unit(node: box)
+        map = Map(unit: base, n: n)
+        
+        
+        //MONTAR A MATRIX && DESENHAR A MATRIX
+        for i in 0...n {
+            map.appendNewRowInArea2D()
+            for j in 0...n {
+                let boxVoid: Unit = Unit(node: voidBox)
+                boxVoid.node.position = map.getPositionUnit(x: CGFloat(i), y: 0, z: CGFloat(j))
+                map.appendInArea2D(unit: boxVoid, x: i)
+            }
+        }
+        
+        //Gerar aleatorios iniciais
+        for _ in 0...40 {
+            self.aleatoryAlive()
+        }
+        
+        
+        //CALCULAR OS VIZINHOS
+//        map.calcSurroundings2D()
+        
+        
+        // FAZ A FORMA PARA A PROXIMA GERACAO
+        self.drawBox(box: box, voidBox: voidBox)
+            
+
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            self.map.calcSurroundings2D()
+            self.calcRules()
+            
+        }
 
         
-        let box2 = createBox(box: box, in: SCNVector3(x: w * 0.1 , y: 0, z: l * 0.1))
         
-        let box3: Unit = Unit(node: box)
-        let map: Map = Map(unit: box3, n: 3)
-        
-        box3.node.position = map.getPositionUnit(x: 0, y: 0, z: 0)
-        
-        let box4: Unit = Unit(node: box)
-        box4.node.position = map.getPositionUnit(x: 1, y: 1, z: 0)
-        
-        self.rootNode.addChildNode(box3.node)
-        self.rootNode.addChildNode(box4.node)
-        
+            
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
         self.rootNode.addChildNode(cameraNode)
         
         // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 30)
-        
-        // create and add a light to the scene
-//        let lightNode = SCNNode()
-//        lightNode.light = SCNLight()
-//        lightNode.light!.type = .omni
-//        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-//        self.rootNode.addChildNode(lightNode)
-        
-        // create and add an ambient light to the scene
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = NSColor.darkGray
-        self.rootNode.addChildNode(ambientLightNode)
-        
-        // retrieve the ship node
-//        let ship = self.rootNode.childNode(withName: "ship", recursively: true)!
-        
-        // animate the 3d object
-//        ship.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+        cameraNode.position = SCNVector3(x: 10, y: 10, z: 40)
+    }
+    
+    func calcRules() {
+        for i in 0...n {
+            for j in 0...n {
+                let box: Unit = map.area2D[i][j]
+                if box.state == .alive {
+                    if box.lonelyDeath() || box.overpopulationDeath() {
+                        box.node.removeFromParentNode()
+                    }
+                } else {
+                    if box.populationAlive() {
+                        self.rootNode.addChildNode(box.node)
+                    }
+                }
+            }
+        }
     }
     
     func createBox(box: SCNNode, in pos: SCNVector3) -> SCNNode {
@@ -74,6 +94,31 @@ public class GameScene: SCNScene {
     }
     
     
+    func drawBox(box boxFull: SCNNode, voidBox: SCNNode) {
+        for i in 0...n {
+            for j in 0...n {
+                let box: Unit = map.area2D[i][j]
+                
+                if box.state == .alive {
+//                    guard let boxFullCopy = boxFull.copy() as? SCNNode else { return }
+//                    boxFullCopy.position = box.node.position
+                    self.rootNode.addChildNode(box.node)
+                    
+                } else {
+//                    guard let boxVoidCopy = voidBox.copy() as? SCNNode else { return }
+//                    boxVoidCopy.position = box.node.position
+//                    self.rootNode.addChildNode(boxVoidCopy)
+                }
+            }
+        }
+    }
+    
+    func aleatoryAlive() {
+        //Coloca uma box em uma posicao aleatoria
+        let radomX = Int.random(in: 0...n)
+        let radomY = Int.random(in: 0...n)
+        map.changeStateOneUnit(x: radomX, y: radomY)    }
+        
     func setupCamera() {
         
     }

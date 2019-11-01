@@ -64,13 +64,15 @@
 			isa = PBXGroup;
 			children = (
 				82304339236B5EBE002F4C2B /* AppDelegate.swift */,
+				82580307236CADA600B85C6C /* Extensions */,
+				82580306236CAD9D00B85C6C /* Protocols */,
 				82304358236B7466002F4C2B /* Enum */,
 				8230434E236B5FB0002F4C2B /* Model */,
 				82304353236B621B002F4C2B /* Controllers */,
 				8230434F236B5FBA002F4C2B /* Scenes */,
 				8230433D236B5EBE002F4C2B /* art.scnassets */,
 				8230433F236B5EC0002F4C2B /* Assets.xcassets */,
-				82304341236B5EC0002F4C2B /* Main.storyboard */,
+				829F36C9236BDAE70004BDCC /* View */,
 				82304344236B5EC0002F4C2B /* Info.plist */,
 				82304345236B5EC0002F4C2B /* game_of_life_mac.entitlements */,
 			);
@@ -140,6 +142,28 @@
 				8230435C236B754C002F4C2B /* Map.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		82580306236CAD9D00B85C6C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		82580307236CADA600B85C6C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		829F36C9236BDAE70004BDCC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				82304341236B5EC0002F4C2B /* Main.storyboard */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
