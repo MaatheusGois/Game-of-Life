@@ -16,6 +16,7 @@ public class GameScene: SCNScene {
     
     let boxScene = SCNScene(named: "art.scnassets/box.scn")
     let n = 10
+    var zPosition = 0
     
     func setupScene() {
         
@@ -43,19 +44,14 @@ public class GameScene: SCNScene {
             self.aleatoryAlive()
         }
         
-        
-        //CALCULAR OS VIZINHOS
-//        map.calcSurroundings2D()
-        
-        
         // FAZ A FORMA PARA A PROXIMA GERACAO
         self.drawBox(box: box, voidBox: voidBox)
             
 
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+            self.zPosition += 1
             self.map.calcSurroundings2D()
             self.calcRules()
-            
         }
 
         
@@ -76,11 +72,13 @@ public class GameScene: SCNScene {
                 let box: Unit = map.area2D[i][j]
                 if box.state == .alive {
                     if box.lonelyDeath() || box.overpopulationDeath() {
-                        box.node.removeFromParentNode()
+//                        box.node.removeFromParentNode()
                     }
                 } else {
                     if box.populationAlive() {
-                        self.rootNode.addChildNode(box.node)
+                        guard let boxCopy = box.node.copy() as? SCNNode else { return }
+                        boxCopy.position.y = map.getPositionUnitZ(z: CGFloat(zPosition))
+                        self.rootNode.addChildNode(boxCopy)
                     }
                 }
             }
@@ -100,14 +98,7 @@ public class GameScene: SCNScene {
                 let box: Unit = map.area2D[i][j]
                 
                 if box.state == .alive {
-//                    guard let boxFullCopy = boxFull.copy() as? SCNNode else { return }
-//                    boxFullCopy.position = box.node.position
                     self.rootNode.addChildNode(box.node)
-                    
-                } else {
-//                    guard let boxVoidCopy = voidBox.copy() as? SCNNode else { return }
-//                    boxVoidCopy.position = box.node.position
-//                    self.rootNode.addChildNode(boxVoidCopy)
                 }
             }
         }
@@ -117,7 +108,8 @@ public class GameScene: SCNScene {
         //Coloca uma box em uma posicao aleatoria
         let radomX = Int.random(in: 0...n)
         let radomY = Int.random(in: 0...n)
-        map.changeStateOneUnit(x: radomX, y: radomY)    }
+        map.changeStateOneUnit(x: radomX, y: radomY)
+    }
         
     func setupCamera() {
         

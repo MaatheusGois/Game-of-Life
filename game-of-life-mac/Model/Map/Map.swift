@@ -46,6 +46,11 @@ class Map {
         return SCNVector3(x: xUnit, y: yUnit, z: zUnit)
     }
     
+    func getPositionUnitZ(z: CGFloat) -> CGFloat {
+        let zUnit = ((length / CGFloat(n)) * 0.5) + z * (length / CGFloat(n))
+        return zUnit
+    }
+    
     func appendNewRowInArea2D(){
         self.area2D.append([Unit]())
     }
