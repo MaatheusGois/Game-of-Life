@@ -40,22 +40,18 @@ public class GameScene: SCNScene {
         }
         
         //Gerar aleatorios iniciais
-        for _ in 0...40 {
+        for _ in 0...100 {
             self.aleatoryAlive()
         }
         
         // FAZ A FORMA PARA A PROXIMA GERACAO
         self.drawBox(box: box, voidBox: voidBox)
             
-
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
             self.zPosition += 1
             self.map.calcSurroundings2D()
             self.calcRules()
         }
-
-        
-        
             
         // create and add a camera to the scene
         let cameraNode = SCNNode()
