@@ -16,6 +16,8 @@
 		82304357236B7404002F4C2B /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82304356236B7404002F4C2B /* Unit.swift */; };
 		8230435B236B7483002F4C2B /* UnitState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8230435A236B7483002F4C2B /* UnitState.swift */; };
 		8230435D236B754C002F4C2B /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8230435C236B754C002F4C2B /* Map.swift */; };
+		82A997402370BD990077E309 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A9973F2370BD990077E309 /* GameState.swift */; };
+		82C7665D2370ACEA00809F79 /* TouchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C7665C2370ACEA00809F79 /* TouchBarDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,8 @@
 		82304356236B7404002F4C2B /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		8230435A236B7483002F4C2B /* UnitState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitState.swift; sourceTree = "<group>"; };
 		8230435C236B754C002F4C2B /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
+		82A9973F2370BD990077E309 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		82C7665C2370ACEA00809F79 /* TouchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchBarDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				8230433B236B5EBE002F4C2B /* GameViewController.swift */,
+				82C7665C2370ACEA00809F79 /* TouchBarDelegate.swift */,
 			);
 			path = GameView;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				8230435A236B7483002F4C2B /* UnitState.swift */,
+				82A9973F2370BD990077E309 /* GameState.swift */,
 			);
 			path = Enum;
 			sourceTree = "<group>";
@@ -241,6 +247,8 @@
 				82304357236B7404002F4C2B /* Unit.swift in Sources */,
 				8230435B236B7483002F4C2B /* UnitState.swift in Sources */,
 				8230433C236B5EBE002F4C2B /* GameViewController.swift in Sources */,
+				82C7665D2370ACEA00809F79 /* TouchBarDelegate.swift in Sources */,
+				82A997402370BD990077E309 /* GameState.swift in Sources */,
 				8230435D236B754C002F4C2B /* Map.swift in Sources */,
 				8230433A236B5EBE002F4C2B /* AppDelegate.swift in Sources */,
 			);

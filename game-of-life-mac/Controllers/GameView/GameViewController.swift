@@ -17,6 +17,7 @@ class GameViewController: NSViewController {
         super.viewDidLoad()
         
         scene?.setupScene()
+
         setupViewController()
         setupGestures()
         

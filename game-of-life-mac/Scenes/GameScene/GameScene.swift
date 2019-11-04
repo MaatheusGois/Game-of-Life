@@ -10,17 +10,21 @@ import Cocoa
 import SceneKit
 import AVFoundation
 
+
+
 public class GameScene: SCNScene {
     private(set) var map: Map = Map()
     private(set) var nextState: [[UnitState]] = [[UnitState]]()
     private(set) var box: SCNNode = SCNNode()
     
-    let boxScene = SCNScene(named: "art.scnassets/box.scn")
-    let sizeMap = 100
-    var zPosition = 0
-    var timeByGeneration = 0.5
+    let boxScene: SCNScene? = SCNScene(named: "art.scnassets/box.scn")
+    let sizeMap: Int = 10
+    var zPosition: Int = 0
+    var timeByGeneration: Double = 0.5
+    var timer: Timer?
+    var state: GameState = .stoped
     
-    func setupScene() {
+    public func setupScene() {
         
         self.setupBox()
         self.setupMap()
@@ -29,33 +33,60 @@ public class GameScene: SCNScene {
         self.map.generateAleatory2D(by: 1000)
         
         self.map.draw(scene: self)
-        self.loop(time: timeByGeneration)
     }
     
-    func setupBox() {
+    public func start() {
+        if self.state == .stoped {
+            self.loop()
+            self.state = .started
+        }
+    }
+    
+    public func stop() {
+        if self.state == .started {
+            self.removeLoop()
+            self.state = .stoped
+        }
+    }
+    
+    public func restart() {
+        self.cleanAll()
+        self.state = .stoped
+        self.removeLoop()
+        
+        self.map.clean()
+        self.map.build2D()
+        self.map.generateAleatory2D(by: 1000)
+        self.map.draw(scene: self)
+    }
+    
+    public func changeTimeByGeneration(time: Double) {
+        if self.state == .started {
+            self.removeLoop()
+            self.timeByGeneration = time
+            self.loop()
+        }
+    }
+    
+    @objc public func nextGeneration() {
+        self.map.zPosition += 1
+        self.map.calcSurroundings2D()
+        self.map.calcRules2D(scene: self)
+    }
+    
+    private func setupBox() {
         guard let boxScene = SCNScene(named: "art.scnassets/box.scn") else { return }
         if let box = boxScene.rootNode.childNode(withName: "box", recursively: false) {
             self.box = box
         }
     }
     
-    func setupMap() {
+    private func setupMap() {
         let base: Unit = Unit(node: box)
-        map = Map(unit: base, size: sizeMap)
+        self.map = Map(unit: base, size: sizeMap)
     }
     
-    func build2D(size: Int) {
-        for i in 0..<size {
-            map.appendNewRowInArea2D()
-            for j in 0..<size {
-                let unitBox: Unit = Unit(node: box)
-                unitBox.node.position = map.getPositionUnit(x: CGFloat(i), y: 0, z: CGFloat(j))
-                map.appendInArea2D(unit: unitBox, x: i)
-            }
-        }
-    }
-        
-    func setupCamera() {
+    private func setupCamera() {
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
@@ -66,11 +97,26 @@ public class GameScene: SCNScene {
         cameraNode.position = SCNVector3(x: 10, y: 10, z: 40)
     }
     
-    func loop(time: Double) {
-        Timer.scheduledTimer(withTimeInterval: time, repeats: true) { timer in
-            self.map.zPosition += 1
-            self.map.calcSurroundings2D()
-            self.map.calcRules2D(scene: self)
+    private func loop() {
+        timer = Timer(timeInterval: timeByGeneration, target: self, selector: #selector(nextGeneration), userInfo: nil, repeats: true)
+        if let timer = timer {
+            RunLoop.current.add(timer, forMode: .common)
         }
     }
+    
+    private func removeLoop() {
+        self.timer?.invalidate()
+    }
+    
+    private func cleanAll() {
+        self.rootNode.enumerateChildNodes { (node, stop) in
+            if let name = node.name {
+                if name == "box" {
+                    node.removeFromParentNode()
+                }
+            }
+            
+        }
+    }
+
 }

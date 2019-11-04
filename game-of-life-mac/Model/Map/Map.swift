@@ -48,6 +48,7 @@ class Map {
             for j in 0..<size {
                 let unitBox: Unit = Unit(node: base.node)
                 unitBox.node.position = self.getPositionUnit(x: CGFloat(i), y: 0, z: CGFloat(j))
+                unitBox.node.name = "box"
                 self.appendInArea2D(unit: unitBox, x: i)
             }
         }
@@ -103,13 +104,11 @@ class Map {
     }
     
     func draw(scene: SCNScene) {
-        func initialDraw() {
-            for i in 0..<size {
-                for j in 0..<size {
-                    let box: Unit = self.area2D[i][j]
-                    if box.state == .alive {
-                        scene.rootNode.addChildNode(box.node)
-                    }
+        for i in 0..<size {
+            for j in 0..<size {
+                let box: Unit = self.area2D[i][j]
+                if box.state == .alive {
+                    scene.rootNode.addChildNode(box.node)
                 }
             }
         }
@@ -165,5 +164,10 @@ class Map {
     func copy(with zone: NSZone? = nil) -> Any {
         let copy = Map(area3D: area3D, area2D: area2D, width: width, height: height, length: length, n: size)
         return copy
+    }
+    
+    func clean() {
+        self.area2D.removeAll()
+        self.zPosition = 0
     }
 }
