@@ -35,16 +35,20 @@ class Unit: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setNewPosition(x: Int, y: Int, z: Int, map: Map) {
+        self.position = map.getPositionUnit(x: CGFloat(x), y: CGFloat(y), z: CGFloat(z))
+    }
+    
     func calcWidth() -> CGFloat {
-        return CGFloat(max.x - min.x) * 0.1
+        return CGFloat(max.x - min.x) * 0.314
     }
     
     func calcHeight() -> CGFloat {
-        return CGFloat(max.y - min.y) * 0.1
+        return CGFloat(max.y - min.y) * 0.314
     }
     
     func calcLength() -> CGFloat {
-        return CGFloat(max.z - min.z) * 0.1
+        return CGFloat(max.z - min.z) * 0.314
     }
     
     func changeState() {
